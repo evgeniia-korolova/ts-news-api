@@ -4,10 +4,11 @@
     "module": "ESNext",                        
     "moduleResolution": "bundler",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
+
+    "rootDir": "./src",    
     
-    "baseUrl": "./",
     "paths": {
-      "*": ["src/*"]
+      "*": ["./src/*"]
     },
 
     "allowJs": true,
