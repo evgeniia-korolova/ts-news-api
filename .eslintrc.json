@@ -1,7 +1,7 @@
 {
     "plugins": ["prettier", "import", "@typescript-eslint"],
     "extends": [
-      "eslint:recommended",
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
         "prettier"
@@ -14,19 +14,14 @@
     "env": {
         "es6": true,
         "browser": true,
-        "node": true,
-         "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-non-null-assertion": "error"
+        "node": true
     },
     "rules": {
         "no-debugger": "off",
         "no-console": 0,
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-non-null-assertion": "error"
     },
-    "ignorePatterns": [
-        "webpack.config.js",
-        "webpack.dev.config.js",
-        "webpack.prod.config.js",
-        "dist/**/*"
-    ]
+    "ignorePatterns": ["webpack.config.js", "webpack.dev.config.js", "webpack.prod.config.js", "dist/**/*"]
 }

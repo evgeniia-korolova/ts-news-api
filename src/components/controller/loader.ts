@@ -1,11 +1,17 @@
+import { RequestArgs } from 'types/types';
+
 class Loader {
-    constructor(baseLink, options) {
+    // options apiKey
+    constructor(
+        private readonly baseLink: string,
+        private readonly options: Record<string, string>
+    ) {
         this.baseLink = baseLink;
         this.options = options;
     }
 
     getResp(
-        { endpoint, options = {} },
+        { endpoint, options = {} }: RequestArgs,
         callback = () => {
             console.error('No callback for GET response');
         }
@@ -13,7 +19,7 @@ class Loader {
         this.load('GET', endpoint, callback, options);
     }
 
-    errorHandler(res) {
+    errorHandler(res: Response): Response {
         if (!res.ok) {
             if (res.status === 401 || res.status === 404)
                 console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
@@ -23,23 +29,19 @@ class Loader {
         return res;
     }
 
-    makeUrl(options, endpoint) {
+    makeUrl(options: Record<string, string>, endpoint: string) {
         const urlOptions = { ...this.options, ...options };
-        let url = `${this.baseLink}${endpoint}?`;
-
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
-        });
-
-        return url.slice(0, -1);
+        const params = new URLSearchParams(urlOptions);
+        const url = `${this.baseLink}${endpoint}?${params}`;
+        return url;
     }
 
-    load(method, endpoint, callback, options = {}) {
+    load<T>(method: 'GET', endpoint: string, callback: (data: T) => void, options: Record<string, string> = {}) {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
-            .then((res) => res.json())
+            .then((res): Promise<T> => res.json())
             .then((data) => callback(data))
-            .catch((err) => console.error(err));
+            .catch((err: unknown) => console.error(err));
     }
 }
 
