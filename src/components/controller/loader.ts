@@ -3,9 +3,15 @@ import { RequestArgs } from 'types/types';
 class Loader {
     // options apiKey
     constructor(
-        private readonly baseLink: string,
-        private readonly options: Record<string, string>
+        protected readonly baseLink: string,
+        protected readonly options: Record<string, string>
     ) {
+        if (!baseLink.trim()) {
+            throw new Error('Loader Error: Base link URL cannot be empty');
+        }
+        if (!options.apiKey || !options.apiKey.trim()) {
+            throw new Error('Loader Error: API key is missing or empty');
+        }
         this.baseLink = baseLink;
         this.options = options;
     }
@@ -32,7 +38,7 @@ class Loader {
     makeUrl(options: Record<string, string>, endpoint: string) {
         const urlOptions = { ...this.options, ...options };
         const params = new URLSearchParams(urlOptions);
-        const url = `${this.baseLink}${endpoint}?${params}`;
+        const url = `${this.baseLink}/${endpoint}?${params}`;
         return url;
     }
 
