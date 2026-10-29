@@ -1,7 +1,28 @@
+export type ResponseStatus = 'ok' | 'error';
+
+export enum HttpMethod {
+  Get = 'GET',
+  Post = 'POST',
+  Put = 'PUT',
+}
+
+export type ApiResponse<T> = {
+  status: ResponseStatus;
+} & T; 
+
 export interface ArticleSource {
   id: string | null;
   name: string;
 }
+
+export type NewsResponse = ApiResponse<{
+  totalResults: number;
+  articles: Article[];
+}>;
+
+export type SourcesResponse = ApiResponse<{
+  sources: SourceItem[];
+}>;
 
 
 export interface Article {
@@ -16,13 +37,6 @@ export interface Article {
 }
 
 
-export interface NewsResponse {
-  status: 'ok' | 'error';
-  totalResults: number;
-  articles: Article[];
-}
-
-
 export interface SourceItem {
   id: string;
   name: string;
@@ -34,10 +48,6 @@ export interface SourceItem {
 }
 
 
-export interface SourcesResponse {
-  status: 'ok' | 'error';
-  sources: SourceItem[];
-}
 
 export interface RequestArgs {
   endpoint: string;

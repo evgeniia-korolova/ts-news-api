@@ -1,4 +1,4 @@
-import { RequestArgs } from 'types/types';
+import { HttpMethod, RequestArgs } from 'types/types';
 
 class Loader {
     // options apiKey
@@ -22,7 +22,7 @@ class Loader {
             console.error('No callback for GET response');
         }
     ) {
-        this.load<T>('GET', endpoint, callback, options);
+        this.load<T>(HttpMethod.Get, endpoint, callback, options);
     }
 
     errorHandler(res: Response): Response {
@@ -42,7 +42,12 @@ class Loader {
         return url;
     }
 
-    load<T>(method: 'GET', endpoint: string, callback: (data: T) => void, options: Record<string, string> = {}) {
+    load<T, M extends HttpMethod = HttpMethod.Get>(
+        method: M,
+        endpoint: string,
+        callback: (data: T) => void,
+        options: Record<string, string> = {}
+    ) {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res): Promise<T> => res.json())
