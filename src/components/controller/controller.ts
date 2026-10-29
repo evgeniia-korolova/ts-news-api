@@ -1,4 +1,3 @@
-
 import { NewsResponse, SourcesResponse } from 'types/types';
 import AppLoader from './appLoader';
 
