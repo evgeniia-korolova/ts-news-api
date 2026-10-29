@@ -1,5 +1,6 @@
 import { NewsResponse, SourcesResponse } from 'types/types';
 import AppLoader from './appLoader';
+import { isNewsResponse, isSourcesResponse } from 'utils/typeGuards';
 
 class AppController extends AppLoader {
     getSources(callback: (data: SourcesResponse) => void) {
@@ -7,7 +8,8 @@ class AppController extends AppLoader {
             {
                 endpoint: 'sources',
             },
-            callback
+            callback,
+            isSourcesResponse
         );
     }
 
@@ -33,7 +35,8 @@ class AppController extends AppLoader {
                             sources: sourceId,
                         },
                     },
-                    callback
+                    callback,
+                    isNewsResponse
                 );
             }
         }

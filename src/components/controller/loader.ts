@@ -20,9 +20,10 @@ class Loader {
         { endpoint, options = {} }: RequestArgs,
         callback: (data: T) => void = () => {
             console.error('No callback for GET response');
-        }
+        },
+        validator: (data: unknown) => data is T
     ) {
-        this.load<T>(HttpMethod.Get, endpoint, callback, options);
+        this.load<T>(HttpMethod.Get, endpoint, callback, options, validator);
     }
 
     errorHandler(res: Response): Response {
@@ -46,12 +47,20 @@ class Loader {
         method: M,
         endpoint: string,
         callback: (data: T) => void,
-        options: Record<string, string> = {}
+        options: Record<string, string> = {},
+        validator: (data: unknown) => data is T
     ) {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res): Promise<T> => res.json())
-            .then((data) => callback(data))
+            // .then((data) => callback(data))
+            .then((data: unknown) => {
+                if (validator(data)) {
+                    callback(data);
+                } else {
+                    throw new Error(`Loader Error: API response for "${endpoint}" failed structural validation.`);
+                }
+            })
             .catch((err: unknown) => console.error(err));
     }
 }
