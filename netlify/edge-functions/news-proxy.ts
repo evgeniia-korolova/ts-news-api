@@ -20,9 +20,6 @@ export default async (request: Request) => {
 
     const newsApiUrl = `https://newsapi.org/${endpoint}?${searchParams ? `${searchParams}` : ''}`;
 
-    // Формат: https://onrender.com...
-    //const newsApiUrl = `https://onrender.com{endpoint}?apiKey=${apiKey}${searchParams ? `&${searchParams}` : ''}`;
-
     try {
         const response = await fetch(newsApiUrl, {
             headers: {
