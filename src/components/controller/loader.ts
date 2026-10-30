@@ -49,13 +49,14 @@ class Loader {
         callback: (data: T) => void,
         options: Record<string, string> = {},
         validator: (data: unknown) => data is T
-    ) {
+    ): Promise<T> {
         return fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res): Promise<T> => res.json())
             .then((data: unknown) => {
                 if (validator(data)) {
                     callback(data);
+                    return data;
                 } else {
                     throw new Error(`Loader Error: API response for "${endpoint}" failed structural validation.`);
                 }

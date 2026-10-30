@@ -3,7 +3,7 @@ import AppLoader from './appLoader';
 import { isNewsResponse, isSourcesResponse } from 'utils/typeGuards';
 
 class AppController extends AppLoader {
-    getSources(callback: (data: SourcesResponse) => void): Promise<void> | undefined {
+    getSources(callback: (data: SourcesResponse) => void): Promise<SourcesResponse> {
         return super.getResp<SourcesResponse>(
             {
                 endpoint: 'sources',
@@ -13,7 +13,7 @@ class AppController extends AppLoader {
         );
     }
 
-    getNews(e: Event, callback: (data: NewsResponse) => void): Promise<void> | undefined {
+    getNews(e: Event, callback: (data: NewsResponse) => void): Promise<NewsResponse> | undefined {
         const target = e.target;
 
         const newsContainer = e.currentTarget;
@@ -32,15 +32,24 @@ class AppController extends AppLoader {
                 return super.getResp<NewsResponse>(
                     {
                         endpoint: 'everything',
-                        options: {
-                            sources: sourceId,
-                        },
+                        options: { sources: sourceId },
                     },
                     callback,
                     isNewsResponse
                 );
             }
         }
+    }
+
+    getNewsRaw(sourceId: string, callback: (data: NewsResponse) => void = () => {}): Promise<NewsResponse> {
+        return super.getResp<NewsResponse>(
+            {
+                endpoint: 'everything',
+                options: { sources: sourceId },
+            },
+            callback,
+            isNewsResponse
+        );
     }
 }
 
