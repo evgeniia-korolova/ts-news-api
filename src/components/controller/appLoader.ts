@@ -22,7 +22,8 @@ class AppLoader extends Loader {
             // const params = new URLSearchParams(options).toString();
 
             // return `${this.baseLink}/${proxyEndpoint}${params ? `?${params}` : ''}`;
-            const params = new URLSearchParams({ ...options, endpoint });
+            const urlOptions = { ...options, ...this.options, endpoint };
+            const params = new URLSearchParams(urlOptions);
 
             return `${this.baseLink}?${params.toString()}`;
         }
