@@ -5,7 +5,7 @@ class AppLoader extends Loader {
         const isProduction = process.env.NODE_ENV === 'production';
 
         // const proxyUrl = 'https://rss-news-api.onrender.com';
-        const proxyUrl = '/netlify/functions/news-proxy';
+        const proxyUrl = '/.netlify/functions/news-proxy';
 
         const baseLink = isProduction ? proxyUrl : process.env.API_URL ?? '';
         const apiKey = isProduction ? 'proxy' : process.env.API_KEY ?? '';
