@@ -39,7 +39,7 @@ class Loader {
     makeUrl(options: Record<string, string>, endpoint: string) {
         const urlOptions = { ...this.options, ...options };
         const params = new URLSearchParams(urlOptions);
-        const url = `${this.baseLink}/${endpoint}?${params}`;
+        const url = `${this.baseLink}${endpoint}?${params}`;
         return url;
     }
 

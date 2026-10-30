@@ -19,9 +19,7 @@ class AppLoader extends Loader {
         if (isProduction) {
             const params = new URLSearchParams(options).toString();
 
-            return `${this.baseLink}/${endpoint}${params ? `?${params}` : ''}`;
-
-            //return `${this.baseLink}?${params.toString()}`;
+            return `${this.baseLink}${endpoint}${params ? `?${params}` : ''}`;
         }
 
         return super.makeUrl(options, endpoint);
