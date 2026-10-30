@@ -23,7 +23,7 @@ class Loader {
         },
         validator: (data: unknown) => data is T
     ) {
-        this.load<T>(HttpMethod.Get, endpoint, callback, options, validator);
+        return this.load<T>(HttpMethod.Get, endpoint, callback, options, validator);
     }
 
     errorHandler(res: Response): Response {
@@ -50,10 +50,9 @@ class Loader {
         options: Record<string, string> = {},
         validator: (data: unknown) => data is T
     ) {
-        fetch(this.makeUrl(options, endpoint), { method })
+        return fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res): Promise<T> => res.json())
-            // .then((data) => callback(data))
             .then((data: unknown) => {
                 if (validator(data)) {
                     callback(data);
@@ -61,7 +60,10 @@ class Loader {
                     throw new Error(`Loader Error: API response for "${endpoint}" failed structural validation.`);
                 }
             })
-            .catch((err: unknown) => console.error(err));
+            .catch((err: unknown) => {
+                console.error(err);
+                throw err;
+            });
     }
 }
 

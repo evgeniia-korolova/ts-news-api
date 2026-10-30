@@ -3,8 +3,8 @@ import AppLoader from './appLoader';
 import { isNewsResponse, isSourcesResponse } from 'utils/typeGuards';
 
 class AppController extends AppLoader {
-    getSources(callback: (data: SourcesResponse) => void) {
-        super.getResp<SourcesResponse>(
+    getSources(callback: (data: SourcesResponse) => void): Promise<void> | undefined {
+        return super.getResp<SourcesResponse>(
             {
                 endpoint: 'sources',
             },
@@ -13,11 +13,12 @@ class AppController extends AppLoader {
         );
     }
 
-    getNews(e: Event, callback: (data: NewsResponse) => void) {
+    getNews(e: Event, callback: (data: NewsResponse) => void): Promise<void> | undefined {
         const target = e.target;
 
         const newsContainer = e.currentTarget;
         if (!target || !newsContainer || !(target instanceof HTMLElement) || !(newsContainer instanceof HTMLElement)) {
+            // TODO: Вместо молчаливого return выбрасывать критическую ошибку DOM, если элементы не валидны
             return;
         }
 
@@ -28,7 +29,7 @@ class AppController extends AppLoader {
             if (!sourceId) return;
             if (newsContainer.getAttribute('data-source') !== sourceId) {
                 newsContainer.setAttribute('data-source', sourceId);
-                super.getResp<NewsResponse>(
+                return super.getResp<NewsResponse>(
                     {
                         endpoint: 'everything',
                         options: {
