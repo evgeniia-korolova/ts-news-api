@@ -3,11 +3,24 @@ import './news.css';
 
 class News {
     draw(data: Article[]) {
-        const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
-
         const fragment = document.createDocumentFragment();
         const newsItemTemp = document.querySelector('#newsItemTemp');
         const newsContainer = document.querySelector('.news');
+
+        if (data.length === 0) {
+            if (newsContainer instanceof HTMLElement) {
+                newsContainer.innerHTML = '';
+
+                const emptyMessage = document.createElement('div');
+                emptyMessage.classList.add('news__empty');
+                emptyMessage.textContent =
+                    'К сожалению, в этом источнике сейчас нет актуальных статей. Пожалуйста, выберите другой канал.';
+
+                newsContainer.appendChild(emptyMessage);
+            }
+            return;
+        }
+        const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
         if (!(newsItemTemp instanceof HTMLTemplateElement)) return;
 
