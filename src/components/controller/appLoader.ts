@@ -5,7 +5,7 @@ class AppLoader extends Loader {
         const isProduction = process.env.NODE_ENV === 'production';
 
         // const proxyUrl = 'https://rss-news-api.onrender.com';
-        const proxyUrl = '/.netlify/functions/news-proxy';
+        const proxyUrl = '/api';
 
         const baseLink = isProduction ? proxyUrl : process.env.API_URL ?? '';
         const apiKey = isProduction ? 'proxy' : process.env.API_KEY ?? '';
@@ -17,15 +17,11 @@ class AppLoader extends Loader {
         const isProduction = process.env.NODE_ENV === 'production';
 
         if (isProduction) {
-            // const proxyEndpoint = `mocks/${endpoint}`;
+            const params = new URLSearchParams(options).toString();
 
-            // const params = new URLSearchParams(options).toString();
+            return `${this.baseLink}/${endpoint}${params ? `?${params}` : ''}`;
 
-            // return `${this.baseLink}/${proxyEndpoint}${params ? `?${params}` : ''}`;
-            const urlOptions = { ...options, ...this.options, endpoint };
-            const params = new URLSearchParams(urlOptions);
-
-            return `${this.baseLink}?${params.toString()}`;
+            //return `${this.baseLink}?${params.toString()}`;
         }
 
         return super.makeUrl(options, endpoint);
