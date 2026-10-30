@@ -24,10 +24,9 @@ export const handler = async (event: NetlifyEvent): Promise<NetlifyResponse> => 
         const apiParams = { ...params };
         delete apiParams.endpoint;
 
+        delete apiParams.apiKey;
+
         const searchParams = new URLSearchParams(apiParams as Record<string, string>).toString();
-
-        const targetUrl = `https://newsapi.org{endpoint}?${searchParams}`;
-
         const apiKey = process.env.API_KEY;
 
         if (!apiKey) {
@@ -37,10 +36,11 @@ export const handler = async (event: NetlifyEvent): Promise<NetlifyResponse> => 
             };
         }
 
+        const targetUrl = `https://onrender.com{endpoint}?apiKey=${apiKey}${searchParams ? `&${searchParams}` : ''}`;
+
         const response = await fetch(targetUrl, {
             method: 'GET',
             headers: {
-                'X-Api-Key': apiKey,
                 'User-Agent': 'Netlify-News-Proxy-App',
             },
         });
