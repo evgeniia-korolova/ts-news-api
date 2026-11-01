@@ -28,7 +28,7 @@ class AppController extends AppLoader {
             if (!sourceId) return;
             if (newsContainer.getAttribute('data-source') !== sourceId) {
                 newsContainer.setAttribute('data-source', sourceId);
-                
+
                 return super.getResp<NewsResponse>(
                     {
                         endpoint: 'everything',
