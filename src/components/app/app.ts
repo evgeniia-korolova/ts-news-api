@@ -20,13 +20,13 @@ class App {
                 try {
                     await this.controller.getNews(e, (data) => this.view.drawNews(data));
                 } catch (error) {
-                    const msg = error instanceof Error ? error.message : 'Ошибка при загрузке новостей';
+                    const msg = error instanceof Error ? error.message : 'failed to load news';
                     this.notifier.show(msg);
-                    console.error('Ошибка при загрузке новостей:', error);
+                    console.error('Failed to load news:', error);
                 }
             });
         } else {
-            throw new Error("Критическая ошибка UI: Главный контейнер '.sources' не найден в DOM.");
+            throw new Error("UI Error: Container '.sources' is missing in DOM.");
         }
 
         try {
@@ -52,17 +52,17 @@ class App {
                         break;
                     }
                 } catch (err) {
-                    console.warn(`Источник ${currentId} пуст или недоступен, проверяем следующий...`, err);
+                    console.warn(`Source ${currentId} is missing or unavailable...`, err);
                 }
             }
             if (!activeSourceId) {
-                throw new Error('Все доступные источники новостей вернули пустой результат.');
+                throw new Error('All sources are empty.');
             }
         } catch (error) {
-            const msg = error instanceof Error ? error.message : 'Критическая ошибка при старте приложения';
+            const msg = error instanceof Error ? error.message : 'Critical error starting app';
             this.notifier.show(msg);
 
-            console.error('Критическая ошибка при старте приложения:', error);
+            console.error('Critical error starting app:', error);
 
             throw error;
         }

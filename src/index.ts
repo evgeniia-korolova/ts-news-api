@@ -21,7 +21,7 @@ import './global.css';
                 }
             });
         } else {
-            console.warn('Элементы мобильного меню не найдены в DOM');
+            console.warn('Mobile menu elements are missing in DOM');
         }
 
         const app = new App();
@@ -30,6 +30,6 @@ import './global.css';
         const notifier = new ErrorNotifier();
         const errorMessage = error instanceof Error ? error.message : 'Unknown critical error';
         notifier.show(errorMessage);
-        console.error('Критическая ошибка инициализации приложения:', error);
+        console.error('Critical error upon init:', error);
     }
 })();

@@ -12,7 +12,7 @@ class News {
             const newsContainer = document.querySelector('.news');
 
             if (!(newsContainer instanceof HTMLElement)) {
-                throw new Error("Критическая ошибка UI: Контейнер '.news' не найден в DOM или имеет неверный тип.");
+                throw new Error("UI Error: Container '.news' is missing in DOM.");
             }
 
             if (data.length === 0) {
