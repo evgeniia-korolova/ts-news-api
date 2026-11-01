@@ -1,6 +1,9 @@
+import { CACHE_CONFIG } from '../../constants';
+import { CacheItem } from 'types/cash.interface';
 import { HttpMethod, RequestArgs } from 'types/types';
 
 class Loader {
+    private readonly CACHE_TTL = CACHE_CONFIG.TTL_MS;
     // options apiKey
     constructor(
         protected readonly baseLink: string,
@@ -43,6 +46,14 @@ class Loader {
         return url;
     }
 
+    private getCacheKey(endpoint: string, options: Record<string, string>): string {
+        const sortedOptions = Object.keys(options)
+            .sort()
+            .map((key) => `${key}:${options[key]}`)
+            .join(',');
+        return `news_cache_${endpoint.replace(/\//g, '_')}_{${sortedOptions}}`;
+    }
+
     load<T, M extends HttpMethod = HttpMethod.Get>(
         method: M,
         endpoint: string,
@@ -50,11 +61,39 @@ class Loader {
         options: Record<string, string> = {},
         validator: (data: unknown) => data is T
     ): Promise<T> {
+        if (method === HttpMethod.Get) {
+            const cacheKey = this.getCacheKey(endpoint, options);
+            const cachedData = localStorage.getItem(cacheKey);
+
+            if (cachedData) {
+                try {
+                    const parsedCache = JSON.parse(cachedData) as CacheItem<T>;
+                    const isFresh = Date.now() - parsedCache.timestamp < this.CACHE_TTL;
+
+                    if (isFresh && validator(parsedCache.data)) {
+                        callback(parsedCache.data);
+                        return Promise.resolve(parsedCache.data);
+                    }
+                } catch (err) {
+                    localStorage.removeItem(cacheKey);
+                    console.error(err);
+                }
+            }
+        }
+
         return fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res): Promise<T> => res.json())
             .then((data: unknown) => {
                 if (validator(data)) {
+                    if (method === HttpMethod.Get) {
+                        const cacheKey = this.getCacheKey(endpoint, options);
+                        const cacheItem: CacheItem<T> = {
+                            data,
+                            timestamp: Date.now(),
+                        };
+                        localStorage.setItem(cacheKey, JSON.stringify(cacheItem));
+                    }
                     callback(data);
                     return data;
                 } else {
