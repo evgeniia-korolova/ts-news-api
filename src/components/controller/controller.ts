@@ -18,7 +18,6 @@ class AppController extends AppLoader {
 
         const newsContainer = e.currentTarget;
         if (!target || !newsContainer || !(target instanceof HTMLElement) || !(newsContainer instanceof HTMLElement)) {
-            // TODO: Вместо молчаливого return выбрасывать критическую ошибку DOM, если элементы не валидны
             return;
         }
 
@@ -29,6 +28,7 @@ class AppController extends AppLoader {
             if (!sourceId) return;
             if (newsContainer.getAttribute('data-source') !== sourceId) {
                 newsContainer.setAttribute('data-source', sourceId);
+                
                 return super.getResp<NewsResponse>(
                     {
                         endpoint: 'everything',
