@@ -1,0 +1,13 @@
+[build]
+  publish = "dist"
+
+
+[[edge_functions]]
+  path = "/api/*"
+  function = "news-proxy"
+
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
